@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@source "../components";
+
+/**
+ * Landing page theme — the same "Walnut Workshop" palette as apps/admin, so the
+ * marketing site and the workshop app read as one product. Light only for now;
+ * the dark "night" tokens are used by the single promise band.
+ */
+@theme {
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-app: #fffdf9;          /* page — lightest layer          */
+  --color-surface: #f6f1e8;      /* warm paper — bands + cards     */
+  --color-surface-2: #ece2cf;    /* deeper warm — cabinet carcass  */
+  --color-ink: #2a2018;          /* espresso — primary text        */
+  --color-ink-soft: #635546;     /* warm taupe — secondary text    */
+  --color-ink-muted: #9b8a75;    /* decorative only (handles)      */
+  --color-line: #e9dece;
+  --color-line-strong: #d6c8b0;
+  --color-brand: #9f5e29;        /* walnut — primary action        */
+  --color-brand-strong: #6f4423; /* hover / pressed                */
+  --color-brand-tint: #e8cfb4;   /* custom-width element highlight */
+  --color-logo: #8a4b2a;
+
+  /* Night band (mirrors admin dark-mode tokens). */
+  --color-night: #201911;
+  --color-night-line: #493a29;
+  --color-night-ink: #f0e7d8;
+  --color-night-ink-soft: #bfae98;
+  --color-oak: #b8763a;
+
+  --container-page: 75rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply antialiased;
+    background: var(--color-app);
+    color: var(--color-ink);
+    letter-spacing: -0.011em;
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-app);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+}

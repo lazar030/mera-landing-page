@@ -1,0 +1,12 @@
+{
+  "name": "@mera/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mera configuration engine: validation, exact-fill solver, layout, pricing, derived geometry. Framework-free, dependency-free, deterministic. Vendored into @mera/landing for standalone deployment.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}
