@@ -3,27 +3,36 @@
 @source "../components";
 
 /**
- * Landing theme — the "Walnut Workshop" palette from apps/admin plus a few
- * drawing tones (paper, worktop) used by the hero demo.
+ * "Walnut Workshop" — Mera's own theme, shared with the main Mera app
+ * (apps/web, apps/admin): warm wood, not cold grays, with one walnut accent.
+ *
+ * Every color is a semantic token, so components never hard-code a hex and the
+ * whole site re-skins from here. Dark mode overrides the same variables under
+ * [data-theme="dark"] — utilities compile to var(--color-*), so they follow.
+ * Contrast is tuned for WCAG AA (text ≥ 4.5:1, large/UI ≥ 3:1) in both themes.
+ *
+ * A few extra drawing tones (paper, worktop) and "always-dark" accents (night,
+ * oak) are landing-only — used by the hero demo and the dark promise/CTA bands.
  */
 @theme {
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --color-app: #fffdf9;
-  --color-surface: #f6f1e8;
-  --color-surface-2: #ece2cf;
+  /* ---- Light: warm paper & walnut ---------------------------------------- */
+  --color-app: #fffdf9;         /* near-white page/container — lightest layer */
+  --color-surface: #f6f1e8;     /* warm paper — header + cards (darker)       */
+  --color-surface-2: #ece2cf;   /* deeper warm — insets / hover               */
   --color-paper: #fbf8f2;          /* drawing sheet inside the demo */
   --color-paper-head: #f3ecdf;
-  --color-ink: #2a2018;
-  --color-ink-soft: #635546;
-  --color-ink-muted: #9b8a75;       /* decorative only */
-  --color-line: #e9dece;
+  --color-ink: #2a2018;         /* espresso — primary text (~13:1 on surface) */
+  --color-ink-soft: #635546;    /* warm taupe — secondary  (~6.8:1)           */
+  --color-ink-muted: #9b8a75;   /* muted wood — hints      (~3.2:1)           */
+  --color-line: #e9dece;        /* warm hairline borders                      */
   --color-line-soft: #efe7da;
   --color-line-warm: #e1d4bf;
-  --color-line-strong: #d6c8b0;
-  --color-brand: #9f5e29;
-  --color-brand-strong: #6f4423;
+  --color-line-strong: #d6c8b0; /* stronger borders                          */
+  --color-brand: #9f5e29;       /* warm walnut — the lighter brown, now primary */
+  --color-brand-strong: #6f4423;/* natural wood walnut — hover/pressed (woodier)*/
   --color-brand-tint: #ecd3b6;
   --color-worktop: #cbb594;
   --color-logo: #8a4b2a;
@@ -41,6 +50,31 @@
   --color-oak-soft: #e0a86f;
 
   --container-page: 75rem;
+}
+
+/* ---- Dark: deep espresso & oak (mirrors the main Mera app) --------------- */
+html[data-theme="dark"] {
+  --color-app: #15100c;         /* deep warm espresso-black                   */
+  --color-surface: #201911;     /* raised warm brown card                     */
+  --color-surface-2: #2a2118;   /* insets / raised bands                      */
+  --color-ink: #f0e7d8;         /* warm off-white — primary (~14:1)           */
+  --color-ink-soft: #bfae98;    /* warm sand — secondary   (~8:1)             */
+  --color-ink-muted: #8a7a64;   /* muted wood — hints      (~3.4:1)           */
+  --color-line: #352a1e;        /* warm borders                               */
+  --color-line-strong: #493a29; /* stronger borders                          */
+  --color-brand: #b8763a;       /* lighter oak — pops against the dark surface */
+  --color-brand-strong: #9c5e1c;/* deeper oak — hover/pressed                 */
+  /* Folding-rule mark on night: lighter oak slats + dark rivets/ticks. */
+  --logo-slat: #c98156;
+  --logo-hinge: #171614;
+  color-scheme: dark;
+}
+
+:root {
+  color-scheme: light;
+  /* Folding-rule mark: clay slats + light rivets/ticks on the sand background. */
+  --logo-slat: #8a4b2a;
+  --logo-hinge: #fdfdfc;
 }
 
 /* Millimetre paper behind the hero: 24 px minor / 120 px major, faded at the edges. */
@@ -81,7 +115,43 @@
   :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
   summary::-webkit-details-marker { display: none; }
   input::placeholder { color: var(--color-ink-muted); }
+
+  /* Native <button> uses the default arrow cursor in every browser (only links
+   * get a pointer). Give all buttons the expected pointer app-wide, and disabled
+   * ones the not-allowed cursor — one rule instead of `cursor-pointer` on each. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label:has(> input[type="file"]) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
+  }
+}
+
+/* Printing a quote/report: always render as a light, legible document — even
+ * when the app is in dark mode — and drop the app chrome. */
+@media print {
+  html {
+    --color-app: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-2: #ffffff;
+    --color-ink: #1c1512;
+    --color-ink-soft: #5b4d3f;
+    --color-ink-muted: #8a7c6c;
+    --color-line: #e5e0d6;
+    --color-line-strong: #d2c8b8;
+    color-scheme: light;
+  }
+  header,
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
   }
 }
