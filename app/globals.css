@@ -3,58 +3,84 @@
 @source "../components";
 
 /**
- * Landing page theme — the same "Walnut Workshop" palette as apps/admin, so the
- * marketing site and the workshop app read as one product. Light only for now;
- * the dark "night" tokens are used by the single promise band.
+ * Landing theme — the "Walnut Workshop" palette from apps/admin plus a few
+ * drawing tones (paper, worktop) used by the hero demo.
  */
 @theme {
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
-  --color-app: #fffdf9;          /* page — lightest layer          */
-  --color-surface: #f6f1e8;      /* warm paper — bands + cards     */
-  --color-surface-2: #ece2cf;    /* deeper warm — cabinet carcass  */
-  --color-ink: #2a2018;          /* espresso — primary text        */
-  --color-ink-soft: #635546;     /* warm taupe — secondary text    */
-  --color-ink-muted: #9b8a75;    /* decorative only (handles)      */
+  --color-app: #fffdf9;
+  --color-surface: #f6f1e8;
+  --color-surface-2: #ece2cf;
+  --color-paper: #fbf8f2;          /* drawing sheet inside the demo */
+  --color-paper-head: #f3ecdf;
+  --color-ink: #2a2018;
+  --color-ink-soft: #635546;
+  --color-ink-muted: #9b8a75;       /* decorative only */
   --color-line: #e9dece;
+  --color-line-soft: #efe7da;
+  --color-line-warm: #e1d4bf;
   --color-line-strong: #d6c8b0;
-  --color-brand: #9f5e29;        /* walnut — primary action        */
-  --color-brand-strong: #6f4423; /* hover / pressed                */
-  --color-brand-tint: #e8cfb4;   /* custom-width element highlight */
+  --color-brand: #9f5e29;
+  --color-brand-strong: #6f4423;
+  --color-brand-tint: #ecd3b6;
+  --color-worktop: #cbb594;
   --color-logo: #8a4b2a;
 
-  /* Night band (mirrors admin dark-mode tokens). */
+  --color-ok-bg: #eef3e6;
+  --color-ok-line: #cddbb8;
+  --color-ok-ink: #3f5a1f;
+  --color-ok-dot: #5b7f2c;
+
   --color-night: #201911;
   --color-night-line: #493a29;
   --color-night-ink: #f0e7d8;
   --color-night-ink-soft: #bfae98;
   --color-oak: #b8763a;
+  --color-oak-soft: #e0a86f;
 
   --container-page: 75rem;
 }
 
+/* Millimetre paper behind the hero: 24 px minor / 120 px major, faded at the edges. */
+@utility mm-grid {
+  background-image:
+    linear-gradient(#efe6d6 1px, transparent 1px),
+    linear-gradient(90deg, #efe6d6 1px, transparent 1px),
+    linear-gradient(#f5eee2 1px, transparent 1px),
+    linear-gradient(90deg, #f5eee2 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: -1px -1px;
+  mask-image: radial-gradient(ellipse 80% 70% at 70% 40%, #000 30%, transparent 80%);
+}
+
+/* Vertical ruler lines on the dark promise band. */
+@utility ruler-lines {
+  background-image: linear-gradient(90deg, #2b2218 1px, transparent 1px);
+  background-size: 120px 100%;
+}
+
+/* Faint grid on the brand CTA block. */
+@utility cta-grid {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
   body {
     @apply antialiased;
     background: var(--color-app);
     color: var(--color-ink);
     letter-spacing: -0.011em;
   }
-  ::selection {
-    background: var(--color-ink);
-    color: var(--color-app);
-  }
-  :focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
-  summary::-webkit-details-marker {
-    display: none;
-  }
+  ::selection { background: var(--color-ink); color: var(--color-app); }
+  :focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+  summary::-webkit-details-marker { display: none; }
+  input::placeholder { color: var(--color-ink-muted); }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
   }

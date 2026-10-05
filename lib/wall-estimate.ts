@@ -1,5 +1,5 @@
 import { exactFill, type ElementDef, type Mm } from '@mera/core'
-import type { WallEstimate, WallModule } from '../interface'
+import type { CutMaterialKey, CutPart, CutPartKey, WallEstimate, WallModule } from '../interface'
 
 /**
  * A single base-cabinet definition for the hero demo. The layout comes from the
@@ -26,6 +26,9 @@ const DEMO_BASE_UNIT: ElementDef = {
   customWidthPricing: 'priced',
   optionGroupIds: [],
 }
+
+/** The wall width used in the copy ("Zid od 3925 mm…"). */
+export const DEMO_WALL: Mm = 3925
 
 /** Units at or above this width are drawn with two doors. */
 const DOUBLE_DOOR_FROM: Mm = 700
@@ -61,6 +64,41 @@ function hardwareCount(doors: number): number {
   return doors * 2 + 4 + 4 + doors
 }
 
+/** Panel thickness deductions (mm) for the demo carcass. */
+const BOARD: Mm = 18
+const FRONT_GAP: Mm = 4
+
+/** Cut parts of one carcass of the given width, before aggregation. */
+function carcassParts(width: Mm, doubleDoor: boolean): CutPart[] {
+  const h = DEMO_BASE_UNIT.defaultHeight
+  const d = DEMO_BASE_UNIT.defaultDepth
+  const inner = width - 2 * BOARD
+  const doorW = doubleDoor ? Math.round((width - FRONT_GAP) / 2 - 2) : width - FRONT_GAP
+  return [
+    part('side', 'chipboard18', h, d, 2),
+    part('bottomTop', 'chipboard18', inner, d, 2),
+    part('shelf', 'chipboard18', inner, d - 20, 1),
+    part('back', 'hdf3', width - FRONT_GAP, h - FRONT_GAP, 1),
+    part('door', 'mdf18', doorW, h - FRONT_GAP, doubleDoor ? 2 : 1),
+  ]
+}
+
+function part(p: CutPartKey, material: CutMaterialKey, length: Mm, width: Mm, qty: number): CutPart {
+  return { part: p, material, length, width, qty }
+}
+
+/** Merges identical parts (same kind, material and size) into one row. */
+function aggregate(parts: CutPart[]): CutPart[] {
+  const rows = new Map<string, CutPart>()
+  for (const p of parts) {
+    const key = p.part + ':' + p.material + ':' + p.length + 'x' + p.width
+    const row = rows.get(key)
+    if (row) row.qty += p.qty
+    else rows.set(key, { ...p })
+  }
+  return [...rows.values()]
+}
+
 /** Lays out a wall with the real solver and prices it with the demo constants. */
 export function estimateWall(wallWidth: Mm): WallEstimate {
   const result = exactFill(wallWidth, [DEMO_BASE_UNIT], { prefer: 'widest' })
@@ -68,22 +106,28 @@ export function estimateWall(wallWidth: Mm): WallEstimate {
   let boardsM2 = 0
   let edgeM = 0
   let hardwarePcs = 0
+  const parts: CutPart[] = []
   const modules: WallModule[] = result.slots.map((slot) => {
     const widthM = slot.width / 1000
     const doubleDoor = slot.width >= DOUBLE_DOOR_FROM
     boardsM2 += boardArea(widthM)
     edgeM += edgeLength(widthM)
     hardwarePcs += hardwareCount(doubleDoor ? 2 : 1)
+    parts.push(...carcassParts(slot.width, doubleDoor))
     return { width: slot.width, isCustomWidth: slot.isCustomWidth, doubleDoor }
   })
 
   const materials = boardsM2 * DEMO.boardPerM2 + edgeM * DEMO.edgePerM + hardwarePcs * DEMO.hardwareAvg
   const labour = materials * DEMO.labourShare
 
+  const cutList = aggregate(parts)
+
   return {
     modules,
     exact: result.exact,
     remainder: result.remainder,
+    cutList,
+    partCount: cutList.reduce((sum, p) => sum + p.qty, 0),
     boardsM2,
     edgeM,
     hardwarePcs,

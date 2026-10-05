@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang={copy.meta.lang} className={geist.variable + ' ' + geistMono.variable}>
-      <body>{children}</body>
+      <body className="overflow-x-clip">{children}</body>
     </html>
   )
 }

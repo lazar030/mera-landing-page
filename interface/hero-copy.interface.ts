@@ -5,6 +5,6 @@ export interface HeroCopy {
   lead: string
   primaryCta: string
   secondaryCta: string
-  /** Reassurance line under the CTAs. */
-  note: string
+  /** Short reassurances shown as a checked row under the CTAs. */
+  perks: string[]
 }

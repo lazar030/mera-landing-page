@@ -9,10 +9,7 @@ import { Faq } from '@/components/Faq'
 import { FinalCta } from '@/components/FinalCta'
 import { SiteFooter } from '@/components/SiteFooter'
 
-/**
- * The Mera landing page, aimed at makers (MAKER_FIRST_REBUILD.md §1). Each
- * section is its own component and reads its strings from `@/content`.
- */
+/** The Mera landing page, aimed at makers. Strings come from `@/content`. */
 export default function LandingPage() {
   return (
     <>

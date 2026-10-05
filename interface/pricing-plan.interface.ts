@@ -4,8 +4,7 @@ export interface PricingPlan {
   price: string
   period: string
   body: string
-  /** Optional highlight badge, e.g. "2 meseca gratis". */
   badge?: string
-  /** The recommended plan gets the filled button and brand border. */
+  /** The recommended plan is rendered as the dark card. */
   featured: boolean
 }
