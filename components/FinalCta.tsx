@@ -48,7 +48,7 @@ export function FinalCta() {
                 <button
                   type="submit"
                   disabled={pending}
-                  className="h-[46px] cursor-pointer rounded-[10px] bg-ink px-5 text-[15px] font-semibold text-app transition-colors hover:bg-night-line disabled:opacity-60"
+                  className="h-[46px] cursor-pointer rounded-[10px] bg-brand px-5 text-[15px] font-semibold text-app transition-colors hover:bg-brand-strong disabled:opacity-60"
                 >
                   {finalCta.submit}
                 </button>

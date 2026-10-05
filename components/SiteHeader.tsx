@@ -21,7 +21,7 @@ export function SiteHeader() {
           <a href={LINKS.login} className={navLink + ' hidden text-ink sm:block'}>{nav.login}</a>
           <a
             href={LINKS.signup}
-            className="ml-1 rounded-[9px] bg-ink px-4 py-2.5 text-sm font-semibold text-app transition-colors hover:bg-brand"
+            className="ml-1 rounded-[9px] bg-brand px-4 py-2.5 text-sm font-semibold text-app transition-colors hover:bg-brand-strong"
           >
             {nav.cta}
           </a>
